@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backend.mapper.TaskMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="TaskResultMap" type="com.backend.entity.Task">
+        <result property="publishStatus" column="PublishStatus"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="isDropList" column="IsDropList"/>
+        <result property="tags" column="tags" typeHandler="com.backend.config.MyBatisJsonTypeHandler"/>
+        <result property="selectedQuestion" column="selectedQuestion" typeHandler="com.backend.config.MyBatisJsonTypeHandler"/>
+    </resultMap>
+    <!-- 根据多个 ID 查询任务列表 -->
+    <select id="selectTasksByIds" resultMap="TaskResultMap">
+        SELECT *
+        FROM backend.task
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <!-- 插入作业信息 -->
+    <insert id="insertTask" parameterType="com.backend.entity.Task">
+        INSERT INTO backend.task (
+        title, tags, teacher, selectedQuestion,
+        PublishStatus, IsDropList, start_time, end_time,description
+        ) VALUES (
+        #{title},
+        #{tags, typeHandler=com.backend.config.MyBatisJsonTypeHandler},
+        #{teacher},
+        #{selectedQuestion, typeHandler=com.backend.config.MyBatisJsonTypeHandler},
+        #{publishStatus},
+        #{isDropList},
+        #{startTime},  <!-- 对应 DeadLine 的前面值 -->
+        #{endTime},     <!-- 对应 DeadLine 的后面值 -->
+        #{description}
+        )
+    </insert>
+
+</mapper>

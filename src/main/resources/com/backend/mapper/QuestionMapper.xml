@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backend.mapper.QuestionMapper">
+
+    <!-- 插入问题 -->
+
+    <!-- 插入 tags -->
+    <insert id="insertTags" parameterType="java.util.Map">
+        INSERT INTO question_tags (question_id, tag)
+        VALUES
+        <foreach collection="tags" item="tag" separator=",">
+            (#{questionId}, #{tag})
+        </foreach>
+    </insert>
+
+    <!-- 插入 imgs -->
+    <insert id="insertImgs" parameterType="java.util.Map">
+        INSERT INTO question_imgs (question_id, name, url)
+        VALUES
+        <foreach collection="imgs" item="img" separator=",">
+            (#{questionId}, #{img.name}, #{img.url})
+        </foreach>
+    </insert>
+
+    <!-- 插入 comments -->
+    <insert id="insertComments" parameterType="java.util.Map">
+        INSERT INTO question_comments (question_id, comment)
+        VALUES
+        <foreach collection="comments" item="comment" separator=",">
+            (#{questionId}, #{comment})
+        </foreach>
+    </insert>
+
+
+
+</mapper>
