@@ -24,5 +24,5 @@ public class User implements Serializable {
     private String username;
     private String password;
     private String token;
-    private List<Role> roles; // 支持多角色
+    private List<Role> roles; // 支持多roles
 }

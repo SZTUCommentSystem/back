@@ -4,35 +4,58 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.backend.mapper.QuestionMapper">
 
-    <!-- 插入问题 -->
+    <!--
+        此 MyBatis 映射文件用于处理与问题相关的数据插入操作。
+        该文件定义了多个插入语句，分别用于插入问题的标签、图片和评论信息。
+        每个插入语句都接收一个 Map 类型的参数，通过 Map 传递所需的数据。
+    -->
 
-    <!-- 插入 tags -->
+    <!--
+        插入问题相关的标签信息到 question_tags 表中。
+        该插入语句使用了 MyBatis 的 foreach 标签，用于处理多个标签的插入。
+        参数类型为 java.util.Map，其中包含 questionId 和 tags 两个键。
+        questionId 表示问题的唯一标识，tags 是一个标签列表。
+    -->
     <insert id="insertTags" parameterType="java.util.Map">
+        <!-- 插入语句，将问题 ID 和标签信息插入到 question_tags 表中 -->
         INSERT INTO question_tags (question_id, tag)
         VALUES
+        <!-- 使用 foreach 标签遍历 tags 列表，将每个标签与问题 ID 组合插入 -->
         <foreach collection="tags" item="tag" separator=",">
             (#{questionId}, #{tag})
         </foreach>
     </insert>
 
-    <!-- 插入 imgs -->
+    <!--
+        插入问题相关的图片信息到 question_imgs 表中。
+        该插入语句同样使用了 MyBatis 的 foreach 标签，用于处理多个图片的插入。
+        参数类型为 java.util.Map，包含 questionId 和 imgs 两个键。
+        questionId 为问题的唯一标识，imgs 是一个图片对象列表，每个图片对象包含 name 和 url 属性。
+    -->
     <insert id="insertImgs" parameterType="java.util.Map">
+        <!-- 插入语句，将问题 ID、图片名称和图片 URL 插入到 question_imgs 表中 -->
         INSERT INTO question_imgs (question_id, name, url)
         VALUES
+        <!-- 使用 foreach 标签遍历 imgs 列表，将每个图片的信息与问题 ID 组合插入 -->
         <foreach collection="imgs" item="img" separator=",">
             (#{questionId}, #{img.name}, #{img.url})
         </foreach>
     </insert>
 
-    <!-- 插入 comments -->
+    <!--
+        插入问题相关的评论信息到 question_comments 表中。
+        该插入语句也使用了 MyBatis 的 foreach 标签，用于处理多个评论的插入。
+        参数类型为 java.util.Map，包含 questionId 和 comments 两个键。
+        questionId 是问题的唯一标识，comments 是一个评论列表。
+    -->
     <insert id="insertComments" parameterType="java.util.Map">
+        <!-- 插入语句，将问题 ID 和评论内容插入到 question_comments 表中 -->
         INSERT INTO question_comments (question_id, comment)
         VALUES
+        <!-- 使用 foreach 标签遍历 comments 列表，将每个评论与问题 ID 组合插入 -->
         <foreach collection="comments" item="comment" separator=",">
             (#{questionId}, #{comment})
         </foreach>
     </insert>
-
-
 
 </mapper>

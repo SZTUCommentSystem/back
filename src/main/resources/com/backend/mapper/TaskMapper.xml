@@ -4,41 +4,79 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.backend.mapper.TaskMapper">
 
-    <!-- 结果映射 -->
+    <!--
+        此 MyBatis 映射文件用于处理与任务（作业）相关的数据库操作，
+        包括结果映射、根据多个 ID 查询任务列表以及插入作业信息。
+    -->
+
+    <!--
+        结果映射部分：
+        定义了一个名为 TaskResultMap 的结果映射，用于将数据库查询结果映射到
+        com.backend.entity.Task 实体类。
+        对于一些特殊类型的字段，使用了自定义的类型处理器 MyBatisJsonTypeHandler
+        来处理 JSON 数据的转换。
+    -->
     <resultMap id="TaskResultMap" type="com.backend.entity.Task">
+        <!-- 将数据库中的 PublishStatus 列映射到实体类的 publishStatus 属性 -->
         <result property="publishStatus" column="PublishStatus"/>
+        <!-- 将数据库中的 start_time 列映射到实体类的 startTime 属性 -->
         <result property="startTime" column="start_time"/>
+        <!-- 将数据库中的 end_time 列映射到实体类的 endTime 属性 -->
         <result property="endTime" column="end_time"/>
+        <!-- 将数据库中的 IsDropList 列映射到实体类的 isDropList 属性 -->
         <result property="isDropList" column="IsDropList"/>
+        <!-- 使用自定义类型处理器处理 tags 字段，将 JSON 数据转换为实体类中的 tags 属性 -->
         <result property="tags" column="tags" typeHandler="com.backend.config.MyBatisJsonTypeHandler"/>
+        <!-- 使用自定义类型处理器处理 selectedQuestion 字段，将 JSON 数据转换为实体类中的 selectedQuestion 属性 -->
         <result property="selectedQuestion" column="selectedQuestion" typeHandler="com.backend.config.MyBatisJsonTypeHandler"/>
     </resultMap>
-    <!-- 根据多个 ID 查询任务列表 -->
+
+    <!--
+        根据多个 ID 查询任务列表：
+        该查询语句通过传入一个 ID 列表，从 backend.task 表中查询对应的任务信息。
+        使用 MyBatis 的 foreach 标签来处理 ID 列表的拼接。
+    -->
     <select id="selectTasksByIds" resultMap="TaskResultMap">
+        <!-- 查询 backend.task 表中的所有字段 -->
         SELECT *
         FROM backend.task
+        <!-- 筛选条件：ID 在传入的 ID 列表中 -->
         WHERE id IN
+        <!-- 使用 foreach 标签遍历传入的 ID 列表，拼接成 SQL 语句所需的格式 -->
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>
     </select>
 
-    <!-- 插入作业信息 -->
+    <!--
+        插入作业信息：
+        该插入语句用于将 com.backend.entity.Task 实体类的信息插入到 backend.task 表中。
+        对于 JSON 类型的字段，同样使用了自定义的类型处理器。
+    -->
     <insert id="insertTask" parameterType="com.backend.entity.Task">
+        <!-- 插入语句，指定要插入的字段 -->
         INSERT INTO backend.task (
         title, tags, teacher, selectedQuestion,
         PublishStatus, IsDropList, start_time, end_time,description
         ) VALUES (
+        <!-- 插入任务标题 -->
         #{title},
+        <!-- 插入任务标签，使用自定义类型处理器处理 JSON 数据 -->
         #{tags, typeHandler=com.backend.config.MyBatisJsonTypeHandler},
+        <!-- 插入教师信息 -->
         #{teacher},
+        <!-- 插入选中的问题，使用自定义类型处理器处理 JSON 数据 -->
         #{selectedQuestion, typeHandler=com.backend.config.MyBatisJsonTypeHandler},
+        <!-- 插入发布状态 -->
         #{publishStatus},
+        <!-- 插入是否为下拉列表的标识 -->
         #{isDropList},
-        #{startTime},  <!-- 对应 DeadLine 的前面值 -->
-        #{endTime},     <!-- 对应 DeadLine 的后面值 -->
+        <!-- 插入任务开始时间，对应 DeadLine 的前面值 -->
+        #{startTime},
+        <!-- 插入任务结束时间，对应 DeadLine 的后面值 -->
+        #{endTime},
+        <!-- 插入任务描述 -->
         #{description}
         )
     </insert>
-
 </mapper>

@@ -59,9 +59,6 @@ public class TaskController {
 
     /**
      * 根据ids获取任务
-     *
-     * @param
-     * @return
      */
     @GetMapping("/questionDetailList")
     public R<List<Task>> getTasksByIds(@RequestParam("ids") List<Integer> ids) {
@@ -74,9 +71,6 @@ public class TaskController {
 
     /**
      * 提交作业接口
-     *
-     * @param
-     * @return
      */
 
     @PostMapping("/submitTask")

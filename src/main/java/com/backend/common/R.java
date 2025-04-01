@@ -16,11 +16,14 @@ import java.util.Map;
 @NoArgsConstructor
 public class R<T> {
 
-    private Integer code; //编码：1成功，0和其它数字为失败
+    //编码：1成功，0和其它数字为失败
+    private Integer code;
 
-    private String message; //信息
+    //信息
+    private String message;
 
-    private T data; //数据
+    //数据
+    private T data;
 
 //    private Map map = new HashMap(); //动态数据
 
